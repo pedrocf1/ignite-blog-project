@@ -1,5 +1,5 @@
 import { GetStaticProps } from 'next';
-
+import Prismic from '@prismicio/client'
 import { getPrismicClient } from '../services/prismic';
 
 import commonStyles from '../styles/common.module.scss';
@@ -24,13 +24,28 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
-// export default function Home() {
-//   // TODO
-// }
+export default function Home() {
+  return (
+    <>
+    </>
+  )
+}
 
-// export const getStaticProps = async () => {
-//   // const prismic = getPrismicClient();
-//   // const postsResponse = await prismic.query(TODO);
+export const getStaticProps = async () => {
+  const prismic = getPrismicClient();
 
-//   // TODO
-// };
+  const postsResponse = await prismic.query([
+    Prismic.predicates.at('document.type', 'publication')
+  ],{
+    fetch: ['publication.title', 'publication.content'],
+    pageSize: 100
+  });
+
+  console.log("postsResponse", JSON.stringify(postsResponse, null, 2))
+
+  return {
+    props:{
+      postsResponse
+    }
+  }
+};
