@@ -1,6 +1,7 @@
 import { GetStaticProps } from 'next';
 import Prismic from '@prismicio/client'
 import { getPrismicClient } from '../services/prismic';
+import Link from 'next/link'
 
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
@@ -24,10 +25,22 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
-export default function Home() {
+export default function Home({ postsPagination }:HomeProps ) {
   return (
-    <>
-    </>
+    <div className={styles.container}>
+      <div className={styles.posts}>
+        {postsPagination.results.map(post=> (
+          <Link key={post.uid} href={`/posts/${post.uid}`}>
+              <a>
+                <strong>{post.data.title}</strong>
+                <p>{post.data.subtitle}</p>
+                <span>{post.data.author}</span>
+                <time>{post.first_publication_date}</time>
+              </a>
+          </Link>
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -38,7 +51,7 @@ export const getStaticProps = async () => {
     Prismic.predicates.at('document.type', 'posts')
   ],{
     fetch: ['publication.title', 'publication.content'],
-    pageSize: 100
+    pageSize: 5
   });
 
   console.log("postsResponse", JSON.stringify(postsResponse, null, 2))
@@ -58,7 +71,10 @@ export const getStaticProps = async () => {
 
   return {
     props:{
-      posts
+      postsPagination:{
+        results: posts,
+        next_page: ''
+      }
     }
   }
 };

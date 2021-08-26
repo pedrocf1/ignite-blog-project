@@ -1,1 +1,35 @@
 // TODO
+.container{
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.posts{
+    max-width: 720px;
+    margin: 48px auto 0;
+
+    a{
+
+        text-decoration: none;
+
+        strong,p,span,time{
+            font-family: 'Inter';
+        }
+
+        strong{
+            display: block;
+            font-size: 28px;
+            color: var(--heading);
+            font-weight: bold;
+            line-height: 2rem;
+        }
+
+        p{
+            color: var(--body);
+            font-size: 18px;
+            line-height: 2rem;
+        }
+    }
+
+}
