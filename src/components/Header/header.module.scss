@@ -1,1 +1,13 @@
-// TODO
+.headerContainer {
+    width: 1120px;
+    height: 105px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    &>img{
+        width: 238px;
+    }
+
+}

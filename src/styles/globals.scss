@@ -1,7 +1,17 @@
-* {
+*{
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-// TODO
+:root{
+  --background: #1A1D23;
+  --heading: #F8F8F8;
+  --body: #D7D7D7;
+  --highlight:#FF57B2;
+  --info: #BBBBBB;
+}
+
+body{
+  background: var(--background);
+}
