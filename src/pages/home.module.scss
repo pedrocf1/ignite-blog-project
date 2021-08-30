@@ -12,6 +12,9 @@
     a{
 
         text-decoration: none;
+        display: block;
+
+        margin-top: 48px;
 
         strong,p,span,time{
             font-family: 'Inter';
@@ -25,11 +28,27 @@
             line-height: 2rem;
         }
 
-        p{
+        p {
             color: var(--body);
             font-size: 18px;
             line-height: 2rem;
+            margin-bottom: .5rem;
+            margin-top: .2rem;
         }
+        span, time {
+            color: var(--info);
+        }
+        span {
+            margin-left: 1rem;
+        }
+    }
+
+    .loadMorePosts {
+        font-family: 'Inter';
+        font-weight: 700;
+        font-size: 18px;
+        color: var(--highlight);
+        margin-top: 4rem;
     }
 
 }

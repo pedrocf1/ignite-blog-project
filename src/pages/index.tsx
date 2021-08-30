@@ -5,6 +5,11 @@ import Link from 'next/link'
 
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
+import { useState } from 'react';
+import format from 'date-fns/format/index';
+import pt from 'date-fns/locale/pt-BR';
+import { FaCalendar, FaUser } from 'react-icons/fa'
+
 
 interface Post {
   uid?: string;
@@ -26,19 +31,52 @@ interface HomeProps {
 }
 
 export default function Home({ postsPagination }:HomeProps ) {
+  const [posts, setPosts] = useState(postsPagination.results)
+  const [nextPage, setNextPage] = useState(postsPagination.next_page)
+
+  function loadMorePosts(){
+    if(!nextPage){
+      return;
+    }
+
+    fetch(nextPage)
+      .then(function(response) {
+        return response.json()
+      }).then(function(data){
+        setPosts(oldState => [
+          ...oldState,
+          {
+            uid: data.results[0].uid,
+            first_publication_date: data.results[0].first_publication_date,
+            data: {
+              title: data.results[0].data.title,
+              subtitle: data.results[0].data.subtitle,
+              author: data.results[0].data.author,
+            }
+          }
+        ]);
+
+        setNextPage(data.next_page)
+      })
+
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.posts}>
-        {postsPagination.results.map(post=> (
+        {posts.map(post=> (
           <Link key={post.uid} href={`/posts/${post.uid}`}>
               <a>
                 <strong>{post.data.title}</strong>
                 <p>{post.data.subtitle}</p>
-                <span>{post.data.author}</span>
-                <time>{post.first_publication_date}</time>
+                <time>
+                  <FaCalendar/> {format(new Date(post.first_publication_date), 'dd MM yyy')}
+                </time>
+                <span> <FaUser/> {post.data.author} </span>
               </a>
           </Link>
         ))}
+        <p onClick={()=>loadMorePosts()} className={styles.loadMorePosts}>Carregar mais posts</p>
       </div>
     </div>
   )
@@ -51,10 +89,9 @@ export const getStaticProps = async () => {
     Prismic.predicates.at('document.type', 'posts')
   ],{
     fetch: ['publication.title', 'publication.content'],
-    pageSize: 5
+    pageSize: 5,
+    page:1
   });
-
-  console.log("postsResponse", JSON.stringify(postsResponse, null, 2))
 
   const posts: Post[] = postsResponse.results.map(post=>{
       return {
@@ -73,7 +110,7 @@ export const getStaticProps = async () => {
     props:{
       postsPagination:{
         results: posts,
-        next_page: ''
+        next_page: postsResponse.next_page
       }
     }
   }
