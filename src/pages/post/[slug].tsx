@@ -1,4 +1,5 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { RichText } from 'prismic-dom';
 
 import { getPrismicClient } from '../../services/prismic';
 
@@ -26,11 +27,17 @@ interface PostProps {
   post: Post;
 }
 
-export default function Post() {
+export default function Post({ post }: PostProps) {
+  console.log("post", post)
   return (
-    <>
-    <h1>Irré</h1>
-    </>
+    <div className={styles.postContainer}>
+      <h1>irré</h1>
+      <div
+        dangerouslySetInnerHTML={{ __html: post.data.content[0].body[0].text }} 
+      >
+
+      </div>
+    </div>
   )
 }
 
@@ -54,15 +61,31 @@ export const getStaticProps = async ({ params }) => {
   const { slug } = params;
 
   const prismic = getPrismicClient();
-  console.log("String(slug)", String(slug))
-  const response = await prismic.getByUID('posts', String(slug), {});
   
-  console.log("response", response)
-  // TODO
-
+  const response = await prismic.getByUID('posts', String(slug), {});
+    
+  const post:Post = {
+    first_publication_date: response.first_publication_date,
+    data: {
+      title: response.data.title,
+      banner: {
+        url: response.data.banner.url
+      },
+      author: response.data.author,
+      content: response.data.content.map(content => {
+        return {
+          heading: content.heading,
+          body:  content.body.map(contentBody => {
+            return {text: contentBody.text}
+          }),
+        }
+      })
+    }
+  }
+ 
   return {
     props:{
-      
+      post
     }
   }
 };
