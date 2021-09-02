@@ -1,5 +1,47 @@
-.postContainer{
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 0 2rem;
+.postContainer {
+    width: 100%;
+
+    color: var(--body);
+
+    & > img {
+        width: 100%;
+    }
+
+    span, time, h1{
+        font-family: 'Inter';
+    }
+
+    h1 {
+        font-size: 48px;
+        font-weight: bold;
+
+        text-align: left;
+
+        color: var(--heading);
+    }
+
+    span, time {
+        color: var(--info);
+    }
+
+    span {
+        margin-left: 1rem;
+    }
+
+    .postContentContainer {
+        max-width: 900px;
+        margin: 80px auto;
+        padding: 0 2rem;
+
+        .contentHeading {
+            margin: 0;
+            margin-top: 60px;
+        }
+        
+        .contentBody {
+            margin-top: 30px;
+        }
+    }
+
+
 }

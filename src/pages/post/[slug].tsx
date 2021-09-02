@@ -1,5 +1,7 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { RichText } from 'prismic-dom';
+import { FaCalendar, FaUser } from 'react-icons/fa';
+import format from 'date-fns/format/index';
 
 import { getPrismicClient } from '../../services/prismic';
 
@@ -31,11 +33,26 @@ export default function Post({ post }: PostProps) {
   console.log("post", post)
   return (
     <div className={styles.postContainer}>
-      <h1>irré</h1>
-      <div
-        dangerouslySetInnerHTML={{ __html: post.data.content[0].body[0].text }} 
-      >
-
+      <img src={post.data.banner.url} alt="" />
+      <div className={styles.postContentContainer}>
+        <h1>{post.data.title}</h1>
+        <time>
+          <FaCalendar/> {format(new Date(post.first_publication_date), 'dd MMM yyy')}
+        </time>
+        <span> <FaUser/> {post.data.author} </span>
+        {post.data.content.map(content => (
+            <>
+              <p className={styles.contentHeading}>
+                {content.heading}
+              </p> 
+              {content.body.map(contentBody => (
+                <div className={styles.contentBody}
+                  dangerouslySetInnerHTML={{ __html: contentBody.text }} 
+                >
+                </div>
+              ))}
+            </>
+          ))}
       </div>
     </div>
   )
